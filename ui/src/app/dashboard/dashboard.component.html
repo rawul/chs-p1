@@ -1,0 +1,104 @@
+<div class="messaging">
+  <div class="nav-bar">
+    <!-- <span>Users</span> -->
+    <span>Forms</span>
+    <button class="btn-logout" type="button" (click)="logout()">Logout</button>
+  </div>
+  <!-- <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>John</td>
+        <td>Doe</td>
+        <td>
+          <i class="fa fa-trash" aria-hidden="true"></i>
+        </td>
+      </tr>
+      <tr>
+        <td>John</td>
+        <td>Doe</td>
+        <td>
+          <i class="fa fa-trash" aria-hidden="true"></i>
+        </td>
+      </tr>
+      <tr>
+        <td>John</td>
+        <td>Doe</td>
+        <td>
+          <i class="fa fa-trash" aria-hidden="true"></i>
+        </td>
+      </tr>
+      <tr>
+        <td>John</td>
+        <td>Doe</td>
+        <td>
+          <i class="fa fa-trash" aria-hidden="true"></i>
+        </td>
+      </tr>
+      <tr>
+        <td>John</td>
+        <td>Doe</td>
+        <td>
+          <i class="fa fa-trash" aria-hidden="true"></i>
+        </td>
+      </tr>
+    </tbody>
+  </table> -->
+  <div>
+    <form *ngIf="newSurvey">
+      <span (click)="addQuestion()"
+        style="text-align: center;background-color:rgb(0, 225, 255); color:black;font-size: 16px;padding: 10px;display: block;">Add
+        question +</span>
+      <div class="form-group">
+        <input type="text" name="name" id="name" class="form-control" placeholder="Name" value="">
+      </div>
+
+      <div style="padding: 10px 0px;" *ngFor="let q of newSurvey.questions;let i=index">
+        Question #{{i+1}}
+        <select class="form-control" [value]="q.type" (change)="setValue($event.target.value,q)">
+          <option value="0">Open answer</option>
+          <option value="1">Single Answer</option>
+          <option value="2">Multiple Answer</option>
+        </select>
+        <div class="form-group">
+          <input type="text" name="name" id="name" class="form-control" placeholder="Question" value="">
+        </div>
+        <div class="form-group" *ngIf="q.type == 2 || q.type == 1">
+          Hit enter to add another word
+          <tag-input [(ngModel)]='q.answers' name="answer"></tag-input>
+
+        </div>
+      </div>
+
+
+    </form>
+    <span *ngIf="!newSurvey" (click)="generateSurvey()"
+      style="text-align: center;background-color:rgb(0, 225, 255); color:black;font-size: 16px;padding: 10px;display: block;">Add
+      new Survey +</span>
+    <table *ngIf="!newSurvey" class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>End date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>#1 Kaufland marketing</td>
+          <td>10/10/2019</td>
+          <td>
+            <i class="fa fa-eye" (click)="viewStatistics()" aria-hidden="true"></i>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+</div>

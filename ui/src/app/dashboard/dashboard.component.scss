@@ -1,0 +1,42 @@
+
+
+.nav-bar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  background:#0265ac;
+  height: 64px;
+  font-size: 25px;
+    align-items: center;
+    padding: 0px 10px;
+    color: white;
+}
+
+
+.btn-logout {
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: 18px;
+  &:focus{
+    outline: none;
+  }
+  &:hover{
+    opacity: 0.8;
+  }
+}
+
+
+table {
+  tr {
+    font-size: 14px;
+    td,th {
+      text-align: center;
+      padding: 10px 0px;
+    }
+  }
+}
+
+.form-group{
+  padding: 10px 0px;
+}
