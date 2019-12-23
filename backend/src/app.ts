@@ -77,7 +77,8 @@ unprotectedRouter.post('/auth/login', userController.postLogin);
  */
 const authenticatedRouter = express.Router();
 authenticatedRouter.use(authorizationMiddleware)
-authenticatedRouter.get('/test', (req, res) => { res.send('test'); console.log(res.locals.user) });
+authenticatedRouter.post('/user', userController.postCreateClient);
+authenticatedRouter.delete('/user', userController.deleteClient);
 
 app.use('/v1', unprotectedRouter);
 app.use('/v1', authenticatedRouter);
