@@ -19,6 +19,7 @@
     "errorhandler": "^1.5.1",
     "express": "^4.17.1",
     "express-validator": "^6.3.0",
+    "lodash": "^4.17.15",
     "mongoose": "^5.8.2",
     "ts-node": "^8.5.4",
     "typescript": "^3.7.4",
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
+    "@types/lodash": "^4.14.149",
     "ts-node-dev": "^1.0.0-pre.44"
   }
 }

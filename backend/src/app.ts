@@ -4,6 +4,7 @@ import { User } from "./models/User";
 import { hash } from "./utils/Crypto";
 
 import * as userController from './controllers/UserController';
+import * as surveyController from './controllers/SurveyController';
 import { authorizationMiddleware } from './middlewares/AuthorizationMiddleware';
 
 const bodyParser = require('body-parser');
@@ -79,6 +80,7 @@ const authenticatedRouter = express.Router();
 authenticatedRouter.use(authorizationMiddleware)
 authenticatedRouter.post('/user', userController.postCreateClient);
 authenticatedRouter.delete('/user', userController.deleteClient);
+authenticatedRouter.post('/survey', surveyController.postCreateSurvey);
 
 app.use('/v1', unprotectedRouter);
 app.use('/v1', authenticatedRouter);
