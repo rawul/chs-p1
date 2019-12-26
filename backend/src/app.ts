@@ -8,7 +8,6 @@ import * as surveyController from './controllers/SurveyController';
 import { authorizationMiddleware } from './middlewares/AuthorizationMiddleware';
 
 const bodyParser = require('body-parser');
-const errorHandler = require('errorhandler');
 const mongoose = require('mongoose');
 const chalk = require('chalk');
 
@@ -55,13 +54,6 @@ mongoose.connection.on('open', () => {
  * Express middlewares
  */
 app.use(bodyParser.json());
-app.use(errorHandler());
-// For prod
-// app.use((err, req, res, next) => {
-//     console.error(err);
-//     res.status(500).send('Server Error');
-//   });
-
 
 /*
  * Controller routes
@@ -81,9 +73,20 @@ authenticatedRouter.use(authorizationMiddleware)
 authenticatedRouter.post('/user', userController.postCreateClient);
 authenticatedRouter.delete('/user', userController.deleteClient);
 authenticatedRouter.post('/survey', surveyController.postCreateSurvey);
+authenticatedRouter.get('/survey/:id', surveyController.getSurvey);
 
 app.use('/v1', unprotectedRouter);
 app.use('/v1', authenticatedRouter);
+
+/*
+ * Error handlers
+ */
+// app.use(errorHandler());
+
+app.use((err, req, res, next) => {
+    res.status(500).send({ error: 'Server Error' });
+});
+
 
 /**
  * Boostrap app

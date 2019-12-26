@@ -1,6 +1,7 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { check, validationResult } from "express-validator";
 import * as _ from 'lodash';
+import { Types } from 'mongoose';
 
 import { Survey } from "../models/Survey";
 import { SurveyQuestion, SurveryQuestionDocument } from "../models/SurveyQuestion";
@@ -50,5 +51,23 @@ export const postCreateSurvey = async (req: Request, res: Response) => {
     survey.surveyQuestions = surveyQuestions;
     survey.save();
 
-    return res.send('ok')
+    return res.send({ success: true });
+}
+
+export const getSurvey = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const id = Types.ObjectId(req.params.id);
+        if (!id) {
+            return res.status(400).send({ error: 'Invalid id format' });
+        }
+
+        const survey = await Survey.findOne({ _id: id, active: true }).populate('surveyQuestions');
+        if (!survey) {
+            return res.status(404).send({ error: 'Survey not found' });
+        }
+
+        return res.send(survey);
+    } catch (ex) {
+        return next(ex);
+    }
 }

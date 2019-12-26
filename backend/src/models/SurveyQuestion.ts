@@ -15,7 +15,7 @@ const surveyQuestionSchema = new Schema({
         type: String,
         enum: ['Open', 'SingleChoice', 'MultipleChoice'],
     },
-    chioces: Schema.Types.Array,
+    choices: [{ type: String }],
     survey: {
         type: Schema.Types.ObjectId,
         ref: 'Survey'
