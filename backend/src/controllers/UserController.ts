@@ -37,7 +37,7 @@ export const postCreateClient = async (req: Request, res: Response) => {
     await check('password', 'Password cannot be blank').isLength({ min: 1 }).run(req);
 
     if (res.locals.user.role !== 'admin') {
-        return res.status(403).send({ error: 'Only admins can create users' });
+        return res.status(403).send({ error: 'Only admins can do this' });
     }
 
     const errors = validationResult(req);
@@ -66,7 +66,7 @@ export const deleteClient = async (req: Request, res: Response) => {
     const user = await User.findOneAndDelete({ email: req.body.email, role: 'client' });
 
     if (res.locals.user.role !== 'admin') {
-        return res.status(403).send({ error: 'Only admins can create users' });
+        return res.status(403).send({ error: 'Only admins can do this' });
     }
 
     if (!user) {
