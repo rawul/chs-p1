@@ -73,6 +73,7 @@ authenticatedRouter.use(authorizationMiddleware)
 authenticatedRouter.post('/user', userController.postCreateClient);
 authenticatedRouter.delete('/user', userController.deleteClient);
 authenticatedRouter.post('/survey', surveyController.postCreateSurvey);
+authenticatedRouter.get('/surveys', surveyController.getUserSurveys);
 authenticatedRouter.get('/survey/:id', surveyController.getSurvey);
 authenticatedRouter.post('/answers/:id', surveyController.postAnswers);
 

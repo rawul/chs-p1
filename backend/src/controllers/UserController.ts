@@ -36,6 +36,10 @@ export const postCreateClient = async (req: Request, res: Response) => {
     await check('email', 'Invalid Email').isEmail().run(req);
     await check('password', 'Password cannot be blank').isLength({ min: 1 }).run(req);
 
+    if (res.locals.user.role !== 'admin') {
+        return res.status(403).send({ error: 'Only admins can create users' });
+    }
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).send(errors);
@@ -60,6 +64,11 @@ export const postCreateClient = async (req: Request, res: Response) => {
 
 export const deleteClient = async (req: Request, res: Response) => {
     const user = await User.findOneAndDelete({ email: req.body.email, role: 'client' });
+
+    if (res.locals.user.role !== 'admin') {
+        return res.status(403).send({ error: 'Only admins can create users' });
+    }
+
     if (!user) {
         return res.status(400).send({ error: 'Client with email not existent' });
     }

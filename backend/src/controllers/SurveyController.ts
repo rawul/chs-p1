@@ -59,9 +59,6 @@ export const postCreateSurvey = async (req: Request, res: Response) => {
 export const getSurvey = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const id = Types.ObjectId(req.params.id);
-        if (!id) {
-            return res.status(400).send({ error: 'Invalid id format' });
-        }
 
         const survey = await Survey.findOne({ _id: id, active: true }).populate('surveyQuestions');
         if (!survey) {
@@ -72,6 +69,12 @@ export const getSurvey = async (req: Request, res: Response, next: NextFunction)
     } catch (ex) {
         return next(ex);
     }
+}
+
+export const getUserSurveys = async (req: Request, res: Response) => {
+    const surveys = await Survey.find({ user: res.locals.user }).populate('surveyQuestions');
+
+    return res.send(surveys);
 }
 
 export const postAnswers = async (req: Request, res: Response, next: NextFunction) => {
