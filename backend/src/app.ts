@@ -74,6 +74,7 @@ authenticatedRouter.post('/user', userController.postCreateClient);
 authenticatedRouter.delete('/user', userController.deleteClient);
 authenticatedRouter.post('/survey', surveyController.postCreateSurvey);
 authenticatedRouter.get('/survey/:id', surveyController.getSurvey);
+authenticatedRouter.post('/answers/:id', surveyController.postAnswers);
 
 app.use('/v1', unprotectedRouter);
 app.use('/v1', authenticatedRouter);
@@ -84,6 +85,7 @@ app.use('/v1', authenticatedRouter);
 // app.use(errorHandler());
 
 app.use((err, req, res, next) => {
+    console.log({ err });
     res.status(500).send({ error: 'Server Error' });
 });
 

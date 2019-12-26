@@ -5,6 +5,8 @@ import { Types } from 'mongoose';
 
 import { Survey } from "../models/Survey";
 import { SurveyQuestion, SurveryQuestionDocument } from "../models/SurveyQuestion";
+import { SurveyCompletion } from "../models/SurveyCompletion";
+import { SurveyQuestionAnswer } from "../models/SurveyQuestionAnswer";
 
 export const postCreateSurvey = async (req: Request, res: Response) => {
     await check('name').not().isEmpty().run(req);
@@ -67,6 +69,74 @@ export const getSurvey = async (req: Request, res: Response, next: NextFunction)
         }
 
         return res.send(survey);
+    } catch (ex) {
+        return next(ex);
+    }
+}
+
+export const postAnswers = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const id = Types.ObjectId(req.params.id);
+
+        const survey = await Survey.findOne({ active: true, _id: id }).populate('surveyQuestions');
+        if (!survey) {
+            return res.status(404).send({ error: "No survey found" });
+        }
+
+        await check('name').notEmpty().run(req);
+        await check('email').isEmail().notEmpty().run(req);
+
+        await check('answers.*.value').notEmpty().run(req);
+        await check('answers.*._id').notEmpty().run(req);
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).send(errors);
+        }
+
+        let surveyCompletion = new SurveyCompletion({
+            name: req.body.name,
+            email: req.body.email
+        });
+
+        let surveyQuestionsAnswers = [];
+        for (let question of survey.surveyQuestions) {
+            const answer = req.body.answers.find(a => a._id === question._id.toString());
+            if (!answer) {
+                return res.status(400).send({ error: `Question ${question._id} was not answered !` });
+            }
+
+            if (question.type === 'MultipleChoice' && !_.isArray(answer.value)) {
+                return res.status(400).send({ error: `Question ${question._id} has an array answers !` });
+            } else if (question.type !== 'MultipleChoice' && _.isArray(answer.value)) {
+                return res.status(400).send({ error: `Question ${question._id} has a single value as answer !` });
+            }
+
+            if (
+                (question.type === 'MultipleChoice' && !answer.value.every(v => question.choices.find(c => c === v))) ||
+                (question.type === 'SingleChoice' && !question.choices.find(c => c === answer.value))
+            ) {
+                return res.status(400).send({ error: `Question ${question._id} has invalid choices !` });
+            }
+
+            surveyQuestionsAnswers.push(
+                new SurveyQuestionAnswer({
+                    value: answer.value,
+                    surveyQuestion: answer._id,
+                    surveyCompletion: surveyCompletion
+                })
+            );
+        }
+
+        if (surveyQuestionsAnswers.length === 0) {
+            throw new Error('Invalid question answers');
+        }
+
+        surveyCompletion.surveyQuestionsAnswers = surveyQuestionsAnswers;
+        await surveyCompletion.save();
+        surveyQuestionsAnswers.forEach(s => s.save());
+
+        return res.send({ success: true })
     } catch (ex) {
         return next(ex);
     }
