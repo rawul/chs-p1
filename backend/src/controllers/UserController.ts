@@ -18,12 +18,12 @@ export const postLogin = async (req: Request, res: Response) => {
 
     const user = await User.findOne({ email: req.body.email });
     if (!user) {
-        return res.status(400).send({ error: 'Invalid credentials' })
+        return res.status(403).send({ error: 'Invalid credentials' })
     }
 
     const passwordsMatch = await compare(req.body.password, user.password);
     if (!passwordsMatch) {
-        return res.status(400).send({ error: 'Invalid credentials' })
+        return res.status(403).send({ error: 'Invalid credentials' })
     }
 
     user.token = uuid();
