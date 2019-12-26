@@ -5,8 +5,9 @@
 - `npm start`
 
 # Api spec
-Whenever you start the server, an admin account will be created: `admin@admin.admin:123`
-
+- Whenever you start the server, an admin account will be created: `admin@admin.admin:123`
+- A user can have an `admin` or a `client` role. Admins can create/delete users and `clients` can add surveys.
+### Authentication
 - `POST /auth/login`
   - Body: `{email: 'email@domain.com', password: '123'}` (emails are unique)
   - Responses: 
