@@ -5,6 +5,7 @@
 - `npm start`
 
 # Api spec
+Whenever you start the server, an admin account will be created: `admin@admin.admin:123`
 
 - `POST /auth/login`
   - Body: `{email: 'email@domain.com', password: '123'}` (emails are unique)
@@ -15,10 +16,11 @@
 
 For the following routes you will need to set a the authorization headers with the name `authorization` and value `token`
 
-### User management
+### User management (ADMIN only)
 - `POST /user` (This request will create a new client user)
   - Body: `{email: 'client@domain.com', password: '123'}` 
   - Responses:
+     - Status Code: `403` Body: `{ error: 'Only admins can do this' }` (in case the user trying to do this is not an admin)
     - Status Code: `400` Body: `{errors: 'Client with email already existent'}` (in case client is already existent)
     - Status Code: `400` Body: `{ errors: ... }` (in case email and password are not sent with the request)
     - Status Code: `200` Body: `{email: 'email@domain.com', _id: '123dfweq3e21' }` (if everything went ok, the new user will be returned)
@@ -26,6 +28,7 @@ For the following routes you will need to set a the authorization headers with t
 - `DELETE /user` (This request will create a new client user)
   - Body: `{email: 'client@domain.com' }`
   - Responses:
+    - Status Code: `403` Body: `{ error: 'Only admins can do this' }` (in case the user trying to do this is not an admin)
     - Status Code: `400` Body: `{errors: 'Client not existent'}` (in case client is not existent)
     - Status Code: `200` Body: `{ success: true }` 
 
