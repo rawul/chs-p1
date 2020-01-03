@@ -6,12 +6,16 @@ import { hash } from "./utils/Crypto";
 import * as userController from './controllers/UserController';
 import * as surveyController from './controllers/SurveyController';
 import { authorizationMiddleware } from './middlewares/AuthorizationMiddleware';
+import * as cors from 'cors';
+
 
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const chalk = require('chalk');
 
 const app = express();
+
+app.use(cors());
 
 app.set('host', '0.0.0.0');
 app.set('port', 8085);
