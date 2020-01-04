@@ -26,12 +26,17 @@ For the following routes you will need to set a the authorization headers with t
     - Status Code: `400` Body: `{ errors: ... }` (in case email and password are not sent with the request)
     - Status Code: `200` Body: `{email: 'email@domain.com', _id: '123dfweq3e21' }` (if everything went ok, the new user will be returned)
 
-- `DELETE /user` (This request will create a new client user)
+- `DELETE /user`
   - Body: `{email: 'client@domain.com' }`
   - Responses:
     - Status Code: `403` Body: `{ error: 'Only admins can do this' }` (in case the user trying to do this is not an admin)
     - Status Code: `400` Body: `{errors: 'Client not existent'}` (in case client is not existent)
     - Status Code: `200` Body: `{ success: true }` 
+
+- `GET /users` (Get all users)
+  - Responses:
+    - Status Code: `403` Body: `{ error: 'Only admins can do this' }` (in case the user trying to do this is not an admin)
+    - Status Code: `200` Body: `[ { "_id": "5e108327d7c29e444091ef33", "email": "test@test.test", "createdAt": "2020-01-04T12:20:55.976Z", "role": "client", "surveys": [] }, { "_id": "5e10832cd7c29e444091ef34", "email": "tetrest@teewqst.test", "createdAt": "2020-01-04T12:21:00.785Z", "role": "client", "surveys": [] } ]` 
 
 ### Survey management
 - `POST /survey` (Create a new survey)

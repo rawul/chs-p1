@@ -15,7 +15,6 @@ const chalk = require('chalk');
 
 const app = express();
 
-app.use(cors());
 
 app.set('host', '0.0.0.0');
 app.set('port', 8085);
@@ -58,6 +57,7 @@ mongoose.connection.on('open', () => {
  * Express middlewares
  */
 app.use(bodyParser.json());
+app.use(cors());
 
 /*
  * Controller routes
@@ -75,6 +75,7 @@ unprotectedRouter.post('/auth/login', userController.postLogin);
 const authenticatedRouter = express.Router();
 authenticatedRouter.use(authorizationMiddleware)
 authenticatedRouter.post('/user', userController.postCreateClient);
+authenticatedRouter.get('/users', userController.getUsers);
 authenticatedRouter.delete('/user', userController.deleteClient);
 authenticatedRouter.post('/survey', surveyController.postCreateSurvey);
 authenticatedRouter.get('/surveys', surveyController.getUserSurveys);

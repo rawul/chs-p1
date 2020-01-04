@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { check, validationResult } from 'express-validator';
 
-import { User } from "../models/User";
+import { User, UserDocument } from "../models/User";
 import { compare, hash } from "../utils/Crypto";
 
 const uuid = require('uuid/v4');
@@ -60,6 +60,23 @@ export const postCreateClient = async (req: Request, res: Response) => {
         email: user.email,
         _id: user._id
     });
+}
+
+export const getUsers = async (req: Request, res: Response) => {
+    if (res.locals.user.role !== 'admin') {
+        return res.status(403).send({ error: 'Only admins can do this' });
+    }
+
+    const users = await User.find({ role: 'client' }).populate('surveys');
+    return res.send(
+        users.map((u: UserDocument) => ({
+            _id: u._id,
+            email: u.email,
+            createdAt: u.createdAt,
+            role: u.role,
+            surveys: u.surveys
+        }))
+    );
 }
 
 export const deleteClient = async (req: Request, res: Response) => {
