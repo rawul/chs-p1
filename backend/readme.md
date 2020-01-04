@@ -127,6 +127,11 @@ For the following routes you will need to set a the authorization headers with t
         "__v": 0
         }
         ```
+
+- `GET /survey/:id/qr` will generate a page with qr codes pointing to the link of the survey
+      - Status Code: `404` Body: `{ error: 'Survey not found' }` (in case the survey is not found)
+      - Status Code: `200` Body: the qr page file
+
  ### Survey answers
 - `POST /answers/:id` - the `id` is the survey id that you send the answers for
   - BODY `answers.*._id` needs to match the survey questions got from the request `GET /survey/:id`

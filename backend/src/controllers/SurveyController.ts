@@ -1,12 +1,20 @@
 import { Request, Response, NextFunction } from "express";
 import { check, validationResult } from "express-validator";
 import * as _ from 'lodash';
+import * as QRCode from 'qrcode';
+import * as pdf from 'html-pdf';
+import * as handlebars from 'handlebars';
+
 import { Types } from 'mongoose';
+import * as fs from 'fs';
+import * as path from 'path';
 
 import { Survey } from "../models/Survey";
 import { SurveyQuestion, SurveryQuestionDocument } from "../models/SurveyQuestion";
 import { SurveyCompletion } from "../models/SurveyCompletion";
 import { SurveyQuestionAnswer } from "../models/SurveyQuestionAnswer";
+
+const pdfTemplate = fs.readFileSync(path.join(__dirname, '../assets/template.html'), 'utf8');
 
 export const postCreateSurvey = async (req: Request, res: Response) => {
     await check('name').not().isEmpty().run(req);
@@ -140,6 +148,52 @@ export const postAnswers = async (req: Request, res: Response, next: NextFunctio
         surveyQuestionsAnswers.forEach(s => s.save());
 
         return res.send({ success: true })
+    } catch (ex) {
+        return next(ex);
+    }
+}
+
+export const getQRPdf = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const id = Types.ObjectId(req.params.id);
+
+        const survey = await Survey.findOne({ _id: id });
+        if (!survey || (survey.user !== res.locals.user._id && res.locals.user.role !== 'admin')) {
+            return res.status(404).send({ error: 'Survey not found' });
+        }
+
+        const link = `http://localhost:8085/link/${id}`;
+
+        const opts = {
+            type: 'image/png',
+        }
+
+        await new Promise((resolve, reject) => {
+            QRCode.toFile(path.join(__dirname, '../assets/img.png'), link, opts, function (err, url) {
+                if (err) reject(err);
+                else
+                    resolve(url);
+            });
+        });
+
+        const html = handlebars.compile(pdfTemplate)({
+            qr: new Array(35).fill(path.join(__dirname, '../assets/img.png'))
+        });
+
+        const options = {
+            format: "A4",
+            orientation: "portrait",
+            border: "10mm"
+        };
+
+        pdf.create(html, options)
+            .toBuffer((err, str) => {
+                if (err) {
+                    next(err);
+                } else {
+                    res.header('content-disposition', `attachment; filename="survey-${id}.pdf"`).send(str);
+                }
+            });
     } catch (ex) {
         return next(ex);
     }
