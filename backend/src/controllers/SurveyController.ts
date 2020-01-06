@@ -158,11 +158,11 @@ export const getQRPdf = async (req: Request, res: Response, next: NextFunction) 
         const id = Types.ObjectId(req.params.id);
 
         const survey = await Survey.findOne({ _id: id });
-        if (!survey || (survey.user !== res.locals.user._id && res.locals.user.role !== 'admin')) {
+        if (!survey || (survey.user !== res.locals.user._id)) {
             return res.status(404).send({ error: 'Survey not found' });
         }
 
-        const link = `http://localhost:8085/link/${id}`;
+        const link = `http://localhost:4200/survey/${id}`;
 
         const opts = {
             type: 'image/png',
