@@ -82,6 +82,7 @@ authenticatedRouter.delete('/user', userController.deleteClient);
 authenticatedRouter.post('/survey', surveyController.postCreateSurvey);
 authenticatedRouter.get('/surveys', surveyController.getUserSurveys);
 authenticatedRouter.get('/survey/:id/qr', surveyController.getQRPdf);
+authenticatedRouter.get('/survey/:id/answers', surveyController.getSurveyAnswers);
 
 app.use('/v1', unprotectedRouter);
 app.use('/v1', authenticatedRouter);

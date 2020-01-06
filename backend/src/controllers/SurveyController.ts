@@ -158,7 +158,7 @@ export const getQRPdf = async (req: Request, res: Response, next: NextFunction) 
         const id = Types.ObjectId(req.params.id);
 
         const survey = await Survey.findOne({ _id: id });
-        if (!survey || (survey.user !== res.locals.user._id)) {
+        if (!survey || !survey.user.equals(res.locals.user._id)) {
             return res.status(404).send({ error: 'Survey not found' });
         }
 
@@ -194,6 +194,22 @@ export const getQRPdf = async (req: Request, res: Response, next: NextFunction) 
                     res.header('content-disposition', `attachment; filename="survey-${id}.pdf"`).send(str);
                 }
             });
+    } catch (ex) {
+        return next(ex);
+    }
+}
+
+export const getSurveyAnswers = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const id = Types.ObjectId(req.params.id);
+
+        const survey = await Survey.findOne({ _id: id });
+        if (!survey || !survey.user.equals(res.locals.user._id)) {
+            return res.status(404).send({ error: 'Survey not found' });
+        }
+
+        const completions = await SurveyCompletion.find({ survey: survey._id }).populate('surveyQuestionsAnswers');
+        res.send(completions);
     } catch (ex) {
         return next(ex);
     }
