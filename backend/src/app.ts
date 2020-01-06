@@ -69,6 +69,7 @@ app.use(cors());
 const unprotectedRouter = express.Router();
 unprotectedRouter.post('/auth/login', userController.postLogin);
 unprotectedRouter.get('/survey/:id', surveyController.getSurvey);
+unprotectedRouter.post('/answers/:id', surveyController.postAnswers);
 
 /**
  * Protected Routes
@@ -81,7 +82,6 @@ authenticatedRouter.delete('/user', userController.deleteClient);
 authenticatedRouter.post('/survey', surveyController.postCreateSurvey);
 authenticatedRouter.get('/surveys', surveyController.getUserSurveys);
 authenticatedRouter.get('/survey/:id/qr', surveyController.getQRPdf);
-authenticatedRouter.post('/answers/:id', surveyController.postAnswers);
 
 app.use('/v1', unprotectedRouter);
 app.use('/v1', authenticatedRouter);
