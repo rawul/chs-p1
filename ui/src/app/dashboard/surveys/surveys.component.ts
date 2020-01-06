@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AllService } from 'src/app/all.service';
 import { PDFSource } from 'pdfjs-dist';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-surveys',
@@ -17,7 +18,8 @@ export class SurveysComponent implements OnInit {
     httpHeaders: { Authorization: localStorage.getItem('token') }
   }
   constructor(
-    private serv: AllService
+    private serv: AllService,
+    private snack: MatSnackBar,
   ) { }
 
   ngOnInit() {
@@ -26,18 +28,28 @@ export class SurveysComponent implements OnInit {
   }
 
   generateQRf(s) {
-    console.log('asdas');
-    this.pdfSrc = {
-      url: `http://localhost:8085/v1/survey/${s._id}/qr`,
-      httpHeaders: { Authorization: localStorage.getItem('token') }
-    }
-    this.generateQR = true;
+    this.serv.getQr(s._id)
+      .subscribe((res) => {
+        const blob = new Blob([res], { type: 'application/pdf' })
+        const blobURL = window.URL.createObjectURL(blob);
+        const tmpa = document.createElement('a');
+        tmpa.style.display = 'none';
+        tmpa.href = blobURL;
+        tmpa.target = "_blank";
+        tmpa.setAttribute('download', `survey-${s._id}.pdf`);
+        document.body.appendChild(tmpa);
+        tmpa.click();
+        document.body.removeChild(tmpa);
+      });
   }
 
   viewStatistics(s) {
     this.serv.getSurveyAnswers(s._id).subscribe(x => {
       this.statistics = x;
       this.generateQR = false;
+      if (this.statistics.length === 0) {
+        this.snack.open('There are no answers for this survey yet !');
+      }
     })
   }
 
@@ -76,6 +88,7 @@ export class SurveysComponent implements OnInit {
   }
 
   addQuestion() {
+    console.log(this.newSurvey);
     this.newSurvey.questions.push({
       question: '',
       type: 'Open',

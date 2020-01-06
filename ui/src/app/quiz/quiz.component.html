@@ -1,9 +1,9 @@
 <div>
   <h3> {{selectedSurvey.name}}</h3>
   <input [(ngModel)]="responses.name" placeholder="Your Name" type="text" />
-  <input [(ngModel)]="responses.email" placeholder="Your Email" type="text" />
-  <div *ngFor="let q of selectedSurvey.surveyQuestions;let qI = index">
-    {{q.question}}
+  <input style="margin-bottom: 16px;" [(ngModel)]="responses.email" placeholder="Your Email" type="text" />
+  <div style="margin-bottom:16px" *ngFor="let q of selectedSurvey.surveyQuestions;let qI = index">
+    #{{qI + 1}} {{q.question}}
     <div *ngIf="q.type == 'Open'">
       <input [(ngModel)]="responses.answers[qI].value" type="text" />
     </div>

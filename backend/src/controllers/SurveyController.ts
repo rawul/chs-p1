@@ -209,7 +209,15 @@ export const getSurveyAnswers = async (req: Request, res: Response, next: NextFu
             return res.status(404).send({ error: 'Survey not found' });
         }
 
-        const completions = await SurveyCompletion.find({ survey }).populate('surveyQuestionsAnswers');
+        const completions = await SurveyCompletion.find({ survey })
+            .populate({
+                path: 'surveyQuestionsAnswers',
+                model: 'SurveyQuestionAnswer',
+                populate: {
+                    path: 'surveyQuestion',
+                    model: 'SurveyQuestion'
+                }
+            });
         return res.send(completions);
     } catch (ex) {
         return next(ex);

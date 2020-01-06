@@ -11,7 +11,7 @@ export class TokenInterceptor implements HttpInterceptor {
     ): Observable<HttpEvent<any>> {
         const jwt = localStorage.getItem('token');
         let authReq = request.clone();
-        if (jwt && (request.url.indexOf("/survey/") === -1 || request.url.indexOf("answers") !== -1)) {
+        if (jwt && (request.url.indexOf("/survey/") === -1 || request.url.indexOf("answers") !== -1 || request.url.includes('qr'))) {
             console.log(jwt);
             authReq = request.clone({
                 setHeaders: { Authorization: `${jwt}` }

@@ -40,6 +40,10 @@ export class AllService {
         return this.http.get(`${this.url}/survey/${id}`);
     }
 
+    getQr(id) {
+        return this.http.get(`${this.url}/survey/${id}/qr`, { responseType: 'blob' });
+    }
+
     getSurveyAnswers(id) {
         return this.http.get(`${this.url}/survey/${id}/answers`);
     }
