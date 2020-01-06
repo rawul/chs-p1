@@ -53,6 +53,16 @@ export class SurveysComponent implements OnInit {
     })
   }
 
+  copyLink(s) {
+    const el = document.createElement('textarea');
+    el.value = `http://localhost:4200/survey/${s._id}`;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    this.snack.open('Link copied')
+  }
+
   getSurveys() {
     this.serv.getSurveys().subscribe(x => {
       console.log(x);

@@ -51,7 +51,8 @@
         <td>{{survey.description}}</td>
         <td>
           <i style="margin-right:8px;" class="fa fa-eye" (click)="viewStatistics(survey)" aria-hidden="true"></i>
-          <i class="fa fa-arrow-down" (click)="generateQRf(survey)" aria-hidden="true"></i>
+          <i style="margin-right:8px;" class="fa fa-qrcode" (click)="generateQRf(survey)" aria-hidden="true"></i>
+          <i class="fa fa-link" (click)="copyLink(survey)" aria-hidden="true"></i>
         </td>
       </tr>
 
