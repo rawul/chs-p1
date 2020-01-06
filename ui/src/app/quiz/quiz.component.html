@@ -1,0 +1,19 @@
+<div>
+  <h3> {{selectedSurvey.name}}</h3>
+  <input [(ngModel)]="responses.name" placeholder="Your Name" type="text" />
+  <input [(ngModel)]="responses.email" placeholder="Your Email" type="text" />
+  <div *ngFor="let q of selectedSurvey.surveyQuestions;let qI = index">
+    {{q.question}}
+    <div *ngIf="q.type == 'Open'">
+      <input [(ngModel)]="responses.answers[qI].value" type="text" />
+    </div>
+    <div *ngIf="q.type != 'Open'">
+      <div [ngClass]="{'selected-q':isAnswerSelected(qI,r)}" (click)="selectAnswer(qI,r)"
+        style="background-color: aqua;color: white;cursor: pointer;" *ngFor="let r of q.choices;let i = index">
+        {{r}}
+      </div>
+    </div>
+  </div>
+  <button (click)="sendResponse()">SEND</button>
+
+</div>

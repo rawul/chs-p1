@@ -42,27 +42,9 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
   }
 
-  generateSurvey() {
-    this.newSurvey = {
-      name: 'Kaulfand Marketing',
-      endDate: new Date(),
-      questions: []
-    }
-  }
-
-  setValue(value, q) {
-    q.type = value;
-  }
-
-  addQuestion() {
-    this.newSurvey.questions.push({
-      text: 'Question?',
-      type: 0,
-      answers: []
-    })
-  }
-
+  
   logout() {
+    localStorage.clear();
     this.router.navigate(['']);
   }
 

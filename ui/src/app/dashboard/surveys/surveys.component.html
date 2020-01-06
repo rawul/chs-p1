@@ -1,0 +1,71 @@
+<div>
+  <form *ngIf="newSurvey">
+    <span (click)="addQuestion()"
+      style="text-align: center;background-color:rgb(0, 225, 255); color:black;font-size: 16px;padding: 10px;display: block;width:100%">Add
+      question +</span>
+    <div class="form-group">
+      <input type="text" name="name" [(ngModel)]="newSurvey.name" id="name" class="form-control mt-10-1"
+        placeholder="Name" value="">
+      <input type="text" name="desc" [(ngModel)]="newSurvey.description" id="description" class="form-control mt-10-1"
+        placeholder="Description" value="">
+    </div>
+
+    <div style="padding: 10px 0px;" *ngFor="let q of newSurvey.questions;let i=index">
+      Question #{{i+1}}
+      <select class="form-control" [value]="q.type" (change)="setValue($event.target.value,q)">
+        <option value="Open">Open answer</option>
+        <option value="SingleChoice">Single Answer</option>
+        <option value="MultipleChoice">Multiple Answer</option>
+      </select>
+      <div class="form-group">
+        <input type="text" name="name" [(ngModel)]="q.question" id="name" class="form-control" placeholder="Question"
+          value="">
+      </div>
+      <div class="form-group" *ngIf="q.type!= 'Open'">
+        Hit enter to add another word
+        <tag-input [(ngModel)]='q.choices' name="answer"></tag-input>
+      </div>
+    </div>
+    <button (click)="saveSurvey()">Save</button>
+  </form>
+  <span *ngIf="!newSurvey" (click)="generateSurvey()"
+    style="text-align: center;background-color:rgb(0, 225, 255); color:black;font-size: 16px;padding: 10px;display: block;width:100%">Add
+    new Survey +</span>
+  <!-- <iframe src="http://localhost:8085/v1/survey/5e12e1d1a7b5cfc3d7b8e50f/qr"></iframe> -->
+  <!-- <embed id="emb" width="300" height="375" type="application/pdf"> -->
+
+  <table *ngIf="!newSurvey" class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let survey of surveys">
+        <td>{{survey.name}}</td>
+        <td>{{survey.description}}</td>
+        <td>
+          <i class="fa fa-eye" (click)="viewStatistics(survey)" aria-hidden="true"></i>
+          <i class="fa fa-plus" (click)="generateQRf(survey)" aria-hidden="true"></i>
+        </td>
+      </tr>
+
+
+    </tbody>
+  </table>
+  <div *ngIf="!generateQR && statistics">
+    RESPONSES
+    <div *ngFor="let s of statistics">
+      <div>{{s.name}}</div>
+      <div>{{s.email}}</div>
+      <div *ngFor="let x of s.surveyQuestionsAnswers">
+          {{x.question}}
+          {{x.value}}
+        </div>
+    </div>
+  </div>
+  <pdf-viewer *ngIf="generateQR" [src]="pdfSrc" [render-text]="true" style="display: block;"></pdf-viewer>
+
+</div>

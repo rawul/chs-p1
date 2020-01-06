@@ -1,0 +1,27 @@
+<button (click)="showUserForm = !showUserForm">Add new user</button>
+<div *ngIf="showUserForm">
+  <input type="text" [(ngModel)]="user.email" name="username" id="name" class="mb-10-1 form-control" placeholder="Email"
+    value="">
+  <input type="password" name="password" [(ngModel)]="user.password" id="pwd" class="form-control"
+    placeholder="Password" value="">
+  <button (click)="addNewUser()">ADD</button>
+</div>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Surveys</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of users">
+      <td>{{user.email}}</td>
+      <td>{{user.surveys}}</td>
+      <td>
+        <i (click)="deleteUser(user)" class="fa fa-trash" aria-hidden="true"></i>
+      </td>
+    </tr>
+
+  </tbody>
+</table>
