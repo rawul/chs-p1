@@ -132,6 +132,53 @@ For the following routes you will need to set a the authorization headers with t
       - Status Code: `404` Body: `{ error: 'Survey not found' }` (in case the survey is not found)
       - Status Code: `200` Body: the qr page file
 
+- `GET /survey/:id/answers` will get the list of answers for a specific survey
+    - Status Code: `404` Body: `{ error: 'Survey not found' }` (in case the survey is not found)
+    - Status Code: `200` Body: 
+        ```
+            [
+            {
+                "surveyQuestionsAnswers": [
+                    {
+                        "_id": "5e12f43c5661d7a492e760e1",
+                        "value": "Open quesiton answer",
+                        "surveyQuestion": "5e12efbd999e48a0fffe3cdf",
+                        "surveyCompletion": "5e12f43c5661d7a492e760e0",
+                        "createdAt": "2020-01-06T08:47:56.885Z",
+                        "updatedAt": "2020-01-06T08:47:56.885Z",
+                        "__v": 0
+                    },
+                    {
+                        "_id": "5e12f43c5661d7a492e760e2",
+                        "value": "Vadim",
+                        "surveyQuestion": "5e12efbd999e48a0fffe3ce0",
+                        "surveyCompletion": "5e12f43c5661d7a492e760e0",
+                        "createdAt": "2020-01-06T08:47:56.885Z",
+                        "updatedAt": "2020-01-06T08:47:56.885Z",
+                        "__v": 0
+                    },
+                    {
+                        "_id": "5e12f43c5661d7a492e760e3",
+                        "value": [
+                            "Vadim"
+                        ],
+                        "surveyQuestion": "5e12efbd999e48a0fffe3ce1",
+                        "surveyCompletion": "5e12f43c5661d7a492e760e0",
+                        "createdAt": "2020-01-06T08:47:56.885Z",
+                        "updatedAt": "2020-01-06T08:47:56.885Z",
+                        "__v": 0
+                    }
+                ],
+                "_id": "5e12f43c5661d7a492e760e0",
+                "name": "Darius",
+                "email": "darius@darius.darius",
+                "survey": "5e12efbd999e48a0fffe3cde",
+                "createdAt": "2020-01-06T08:47:56.875Z",
+                "updatedAt": "2020-01-06T08:47:56.875Z",
+                "__v": 0
+            }
+        ]
+        ```
  ### Survey answers
 - `POST /answers/:id` - the `id` is the survey id that you send the answers for
   - BODY `answers.*._id` needs to match the survey questions got from the request `GET /survey/:id`

@@ -144,6 +144,7 @@ export const postAnswers = async (req: Request, res: Response, next: NextFunctio
         }
 
         surveyCompletion.surveyQuestionsAnswers = surveyQuestionsAnswers;
+        surveyCompletion.survey = survey;
         await surveyCompletion.save();
         surveyQuestionsAnswers.forEach(s => s.save());
 
@@ -208,8 +209,8 @@ export const getSurveyAnswers = async (req: Request, res: Response, next: NextFu
             return res.status(404).send({ error: 'Survey not found' });
         }
 
-        const completions = await SurveyCompletion.find({ survey: survey._id }).populate('surveyQuestionsAnswers');
-        res.send(completions);
+        const completions = await SurveyCompletion.find({ survey }).populate('surveyQuestionsAnswers');
+        return res.send(completions);
     } catch (ex) {
         return next(ex);
     }
